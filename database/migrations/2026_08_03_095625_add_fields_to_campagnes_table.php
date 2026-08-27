@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('campagnes', function (Blueprint $table) {
+            //
+             $table->string('libelle',100)->after('code_semaine')->nullable();
+
+            $table->enum('statut',['ACTIVE','CLOTUREE'])->default('ACTIVE')->after('date_fin')->nullable();
+
+            $table->text('observation')->nullable()->after('statut')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('campagnes', function (Blueprint $table) {
+            //
+             $table->dropColumn([
+                'libelle',
+                'statut',
+                'observation'
+            ]);
+        });
+    }
+};
