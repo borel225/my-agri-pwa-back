@@ -46,8 +46,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        //
-        return $role->loadCount('users');   
+        return $role->load(['users', 'permissions'])->loadCount('users');   
     }
 
     /**
@@ -139,5 +138,10 @@ class RoleController extends Controller
             'permissions' =>
                 $role->permissions()->get(),
         ]);
+    }
+
+    public function users(Role $role)
+    {
+        return response()->json($role->users);
     }
 }

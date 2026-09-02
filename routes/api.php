@@ -177,6 +177,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/roles/{role}/statut',[RoleController::class, 'toggleActif'])->middleware('permission:roles.manage');
     Route::get('/roles/{role}/permissions',[RoleController::class, 'permissions'])->middleware('permission:roles.manage');
     Route::put('/roles/{role}/permissions',[RoleController::class, 'syncPermissions'])->middleware('permission:roles.manage');
+    Route::get('/roles/{role}/users',[RoleController::class, 'users'])->middleware('permission:roles.manage');
     Route::get('/roles',[RoleController::class, 'index'])->middleware('permission:roles.manage');
     Route::post('/roles',[RoleController::class, 'store'])->middleware('permission:roles.manage');
     Route::get('/roles/{role}',[RoleController::class, 'show'])->middleware('permission:roles.manage');
