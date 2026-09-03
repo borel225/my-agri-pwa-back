@@ -25,7 +25,8 @@ class RecensementController extends Controller
             'producteur',
             'missionSuivi.campagne',
             'missionSuivi.agent',
-            'missionSuivi.localite'
+            'missionSuivi.localite.sousPrefecture.departement.delegationRegionale',
+            'parcelles.localite'
         ])
         ->orderBy('id', 'desc')
         ->get();

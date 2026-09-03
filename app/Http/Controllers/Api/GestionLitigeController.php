@@ -26,7 +26,7 @@ class GestionLitigeController extends Controller
             return GestionLitige::with([
             'missionSuivi.campagne',
             'missionSuivi.agent',
-            'missionSuivi.localite',
+            'missionSuivi.localite.sousPrefecture.departement.delegationRegionale',
             'parcelle.producteur',
             'ayantDroits',
             'ayantDroits.parcelles'

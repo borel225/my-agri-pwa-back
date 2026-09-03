@@ -19,7 +19,7 @@ class DistributionCarteController extends Controller
             'producteur',
             'missionSuivi.campagne',
             'missionSuivi.agent',
-            'missionSuivi.localite'
+            'missionSuivi.localite.sousPrefecture.departement.delegationRegionale'
         ])
         ->orderBy('id','desc')
         ->get();
@@ -35,7 +35,12 @@ class DistributionCarteController extends Controller
             $request->validated()
         );
 
-        return response()->json($distribution, 201);
+        return response()->json($distribution->load([
+            'producteur.parcelles',
+            'missionSuivi.campagne',
+            'missionSuivi.agent',
+            'missionSuivi.localite.sousPrefecture.departement.delegationRegionale'
+        ]), 201);
     }
 
     /**
@@ -63,7 +68,12 @@ class DistributionCarteController extends Controller
             $request->validated()
         );
 
-        return response()->json($distributionCarte);
+        return response()->json($distributionCarte->load([
+            'producteur.parcelles',
+            'missionSuivi.campagne',
+            'missionSuivi.agent',
+            'missionSuivi.localite.sousPrefecture.departement.delegationRegionale'
+        ]));
         
     }
 

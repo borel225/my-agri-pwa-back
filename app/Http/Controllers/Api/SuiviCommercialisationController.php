@@ -18,7 +18,7 @@ class SuiviCommercialisationController extends Controller
             return SuiviCommercialisation::with([
             'missionSuivi.campagne',
             'missionSuivi.agent',
-            'missionSuivi.localite',
+            'missionSuivi.localite.sousPrefecture.departement.delegationRegionale',
             'operateur',
             'magasin'
         ])
@@ -39,7 +39,7 @@ class SuiviCommercialisationController extends Controller
             $suivi->load([
                 'missionSuivi.campagne',
                 'missionSuivi.agent',
-                'missionSuivi.localite',
+                'missionSuivi.localite.sousPrefecture.departement.delegationRegionale',
                 'operateur',
                 'magasin'
             ]),201);
@@ -54,7 +54,7 @@ class SuiviCommercialisationController extends Controller
             return $suiviCommercialisation->load([
             'missionSuivi.campagne',
             'missionSuivi.agent',
-            'missionSuivi.localite',
+            'missionSuivi.localite.sousPrefecture.departement.delegationRegionale',
             'operateur',
             'magasin'
         ]);
@@ -75,7 +75,7 @@ class SuiviCommercialisationController extends Controller
             $suiviCommercialisation->load([
                 'missionSuivi.campagne',
                 'missionSuivi.agent',
-                'missionSuivi.localite',
+                'missionSuivi.localite.sousPrefecture.departement.delegationRegionale',
                 'operateur',
                 'magasin'
             ]));

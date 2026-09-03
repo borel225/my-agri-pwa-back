@@ -19,7 +19,7 @@ class SuiviCodificationOperateurController extends Controller
             'operateur',
             'missionSuivi.campagne',
             'missionSuivi.agent',
-            'missionSuivi.localite'
+            'missionSuivi.localite.sousPrefecture.departement.delegationRegionale'
         ])
         ->orderBy('id','desc')
         ->get();
@@ -48,7 +48,7 @@ class SuiviCodificationOperateurController extends Controller
                 'operateur',
                 'missionSuivi.campagne',
                 'missionSuivi.agent',
-                'missionSuivi.localite'
+                'missionSuivi.localite.sousPrefecture.departement.delegationRegionale'
             ]);
     }
 

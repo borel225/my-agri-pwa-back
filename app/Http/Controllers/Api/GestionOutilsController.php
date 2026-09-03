@@ -18,7 +18,7 @@ class GestionOutilsController extends Controller
          return GestionOutils::with([
             'missionSuivi.campagne',
             'missionSuivi.agent',
-            'missionSuivi.localite',
+            'missionSuivi.localite.sousPrefecture.departement.delegationRegionale',
             'operateur'
         ])
         ->latest()
@@ -39,7 +39,7 @@ class GestionOutilsController extends Controller
             $gestionOutils->load([
                 'missionSuivi.campagne',
                 'missionSuivi.agent',
-                'missionSuivi.localite',
+                'missionSuivi.localite.sousPrefecture.departement.delegationRegionale',
                 'operateur'
             ]),201);
     }
@@ -54,7 +54,7 @@ class GestionOutilsController extends Controller
             $gestionOutil->load([
                 'missionSuivi.campagne',
                 'missionSuivi.agent',
-                'missionSuivi.localite',
+                'missionSuivi.localite.sousPrefecture.departement.delegationRegionale',
                 'operateur'
             ]));
     }
@@ -74,7 +74,7 @@ class GestionOutilsController extends Controller
             $gestionOutil->load([
                 'missionSuivi.campagne',
                 'missionSuivi.agent',
-                'missionSuivi.localite',
+                'missionSuivi.localite.sousPrefecture.departement.delegationRegionale',
                 'operateur'
             ])
         );
