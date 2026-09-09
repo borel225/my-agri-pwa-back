@@ -45,7 +45,7 @@ class RecensementController extends Controller
             $producteurData = $data['producteur'];
             $producteur = Producteur::create([
                 'code_producteur' => 
-                    'PRD'.str_pad(
+                    'PRD-CI'.str_pad(
                         Producteur::count()+1,
                         4,
                         '0',

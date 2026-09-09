@@ -14,19 +14,23 @@ class DelegationRegionaleController extends Controller
      */
     public function index(Request $request)
     {
-        //
-            $query = DelegationRegionale::query();
+        $query = DelegationRegionale::query();
 
         // Recherche par nom
         if ($request->filled('search')) {
             $query->where('nom','ILIKE','%' . $request->search . '%');
         }
 
+        // Si demande de tout récupérer sans pagination
+        if ($request->boolean('all') || $request->input('per_page') === 'all') {
+            return response()->json($query->orderBy('nom')->get());
+        }
+
         // Nombre d'éléments par page
         $perPage = $request->integer('per_page', 10);
 
         // Protection
-        $perPage = min(max($perPage, 5),100);
+        $perPage = min(max($perPage, 1), 500);
 
         return $query->orderBy('nom')->paginate($perPage);
     }

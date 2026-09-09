@@ -14,7 +14,7 @@ class DepartementController extends Controller
      */
     public function index(Request $request)
     {
-         $query = departement::with(
+         $query = Departement::with(
             'delegationRegionale');
 
             // Recherche
@@ -22,11 +22,21 @@ class DepartementController extends Controller
                 $query->where('nom','ILIKE','%' . $request->search . '%');
             }
 
+            // Filtre par délégation régionale si fourni
+            if ($request->filled('delegation_regionale_id')) {
+                $query->where('delegation_regionale_id', $request->delegation_regionale_id);
+            }
+
+            // Si demande de tout récupérer sans pagination
+            if ($request->boolean('all') || $request->input('per_page') === 'all') {
+                return response()->json($query->orderBy('nom')->get());
+            }
+
             // Nombre par page
             $perPage = $request->integer('per_page',10);
 
             // Protection
-            $perPage = min(max($perPage, 5),100);
+            $perPage = min(max($perPage, 1), 1000);
 
             return $query->orderBy('nom')->paginate($perPage);
     }

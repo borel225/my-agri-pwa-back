@@ -19,11 +19,21 @@ class SousPrefectureController extends Controller
                 $query->where('nom','ILIKE','%' . $request->search . '%');
             }
 
+            // Filtre par département si fourni
+            if ($request->filled('departement_id')) {
+                $query->where('departement_id', $request->departement_id);
+            }
+
+            // Si demande de tout récupérer sans pagination
+            if ($request->boolean('all') || $request->input('per_page') === 'all') {
+                return response()->json($query->orderBy('nom')->get());
+            }
+
             // Nombre par page
             $perPage = $request->integer('per_page',10);
 
-            // Protection
-            $perPage = min(max($perPage, 5),100);
+            // Protection : jusqu'à 1000 éléments
+            $perPage = min(max($perPage, 1), 1000);
 
             return $query->orderBy('nom')->paginate($perPage);
     }

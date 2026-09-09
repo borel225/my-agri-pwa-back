@@ -23,20 +23,24 @@ class LocaliteController extends Controller
 
         // Filtre par sous-préfecture
         if ($request->filled('sous_prefecture_id')) {
-
             $query->where(
                 'sous_prefecture_id',
                 $request->sous_prefecture_id
             );
         }
 
+        // Si demande de tout récupérer sans pagination
+        if ($request->boolean('all') || $request->input('per_page') === 'all') {
+            return response()->json($query->orderBy('nom')->get());
+        }
+
         // Nombre d'éléments par page
         $perPage = $request->integer('per_page', 10);
 
-        // Protection : minimum 5, maximum 100
+        // Protection : minimum 1, maximum 2000
         $perPage = min(
-            max($perPage, 5),
-            100
+            max($perPage, 1),
+            2000
         );
 
         return $query
