@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     void {
 
         $middleware->prepend(\Illuminate\Http\Middleware\HandleCors::class);
+        $middleware->throttleApi('60,1');
         $middleware->alias(['permission' => \App\Http\Middleware\CheckPermission::class]);
         $middleware->redirectGuestsTo(fn (Request $request) => null);
     })

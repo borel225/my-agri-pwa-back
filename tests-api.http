@@ -7,5 +7,5 @@
 
 GET http://127.0.0.1:8000/api/me
 Accept: application/json
-Authorization: Bearer 3|oX3AKiWnspgYQ4TJ7u9mgK5LPBZZTivj4G4uul5ne20b71d8
+Authorization: Bearer {{AUTH_TOKEN}}
 

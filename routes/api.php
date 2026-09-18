@@ -36,7 +36,7 @@ use App\Http\Controllers\Api\PermissionController;
 Route::post(
     '/login',
     [AuthController::class, 'login']
-);
+)->middleware('throttle:5,1');
 
 
 /*
@@ -114,63 +114,79 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/localites/{localite}',[LocaliteController::class, 'update'])->middleware('permission:localites.update');
         Route::delete('/localites/{localite}',[LocaliteController::class, 'destroy'])->middleware('permission:localites.delete');
 
-    Route::apiResource('producteurs',ProducteurController::class);
-    Route::apiResource('parcelles',ParcelleController::class);
+    // PRODUCTEURS ---------------------------------------------------------
+    Route::get('/producteurs', [ProducteurController::class, 'index'])->middleware('permission:recensement.view|gestion_litiges.view|commercialisation.view|distribution_cartes.view|suivi_producteur.view|users.manage');
+    Route::post('/producteurs', [ProducteurController::class, 'store'])->middleware('permission:recensement.create|gestion_litiges.create|users.manage');
+    Route::get('/producteurs/{producteur}', [ProducteurController::class, 'show'])->middleware('permission:recensement.view|gestion_litiges.view|commercialisation.view|distribution_cartes.view|suivi_producteur.view|users.manage');
+    Route::put('/producteurs/{producteur}', [ProducteurController::class, 'update'])->middleware('permission:recensement.update|gestion_litiges.update|users.manage');
+    Route::patch('/producteurs/{producteur}', [ProducteurController::class, 'update'])->middleware('permission:recensement.update|gestion_litiges.update|users.manage');
+    Route::delete('/producteurs/{producteur}', [ProducteurController::class, 'destroy'])->middleware('permission:recensement.delete|gestion_litiges.delete|users.manage');
+
+    // PARCELLES -----------------------------------------------------------
+    Route::get('/parcelles', [ParcelleController::class, 'index'])->middleware('permission:recensement.view|gestion_litiges.view|suivi_producteur.view|users.manage');
+    Route::post('/parcelles', [ParcelleController::class, 'store'])->middleware('permission:recensement.create|gestion_litiges.create|users.manage');
+    Route::get('/parcelles/{parcelle}', [ParcelleController::class, 'show'])->middleware('permission:recensement.view|gestion_litiges.view|suivi_producteur.view|users.manage');
+    Route::put('/parcelles/{parcelle}', [ParcelleController::class, 'update'])->middleware('permission:recensement.update|gestion_litiges.update|users.manage');
+    Route::patch('/parcelles/{parcelle}', [ParcelleController::class, 'update'])->middleware('permission:recensement.update|gestion_litiges.update|users.manage');
+    Route::delete('/parcelles/{parcelle}', [ParcelleController::class, 'destroy'])->middleware('permission:recensement.delete|gestion_litiges.delete|users.manage');
 
     //RELATIONS / RECHERCHES -----------------------------------------------
 
-    Route::get('/producteurs/{id}/parcelles',[ParcelleController::class, 'getByProducteur']);
-    Route::get('/operateurs/{id}/magasins',[MagasinController::class, 'getByOperateur']);
-    Route::get('/departements/delegation/{id}',[DepartementController::class, 'parDelegation'])->middleware('permission:departements.view');
-    Route::get('/sous-prefectures/departement/{id}',[SousPrefectureController::class, 'parDepartement'])->middleware('permission:sous_prefectures.view');
-    Route::get('/localites/sous-prefecture/{id}',[LocaliteController::class, 'parSousPrefecture']);
+    Route::get('/producteurs/{id}/parcelles', [ParcelleController::class, 'getByProducteur'])->middleware('permission:recensement.view|gestion_litiges.view|suivi_producteur.view|users.manage');
+    Route::get('/operateurs/{id}/magasins', [MagasinController::class, 'getByOperateur'])->middleware('permission:codification.view|commercialisation.view|users.manage');
+    Route::get('/departements/delegation/{id}', [DepartementController::class, 'parDelegation'])->middleware('permission:departements.view');
+    Route::get('/sous-prefectures/departement/{id}', [SousPrefectureController::class, 'parDepartement'])->middleware('permission:sous_prefectures.view');
+    Route::get('/localites/sous-prefecture/{id}', [LocaliteController::class, 'parSousPrefecture'])->middleware('permission:localites.view');
 
-    //MODULE OPÉRATION ------------------------------------------------------
+    //MODULE  OPÉRATION ------------------------------------------------------
 
-    Route::apiResource('operateurs',OperateurController::class);
-    Route::apiResource('magasins',MagasinController::class);
-    Route::apiResource('ayants-droits',AyantDroitController::class);
-    Route::apiResource('ayant-droit-parcelles',AyantDroitParcelleController::class);
+    // Opérateurs
+    Route::get('/operateurs', [OperateurController::class, 'index'])->middleware('permission:codification.view|commercialisation.view|users.manage');
+    Route::post('/operateurs', [OperateurController::class, 'store'])->middleware('permission:codification.create|commercialisation.create|users.manage');
+    Route::get('/operateurs/{operateur}', [OperateurController::class, 'show'])->middleware('permission:codification.view|commercialisation.view|users.manage');
+    Route::put('/operateurs/{operateur}', [OperateurController::class, 'update'])->middleware('permission:codification.update|commercialisation.update|users.manage');
+    Route::patch('/operateurs/{operateur}', [OperateurController::class, 'update'])->middleware('permission:codification.update|commercialisation.update|users.manage');
+    Route::delete('/operateurs/{operateur}', [OperateurController::class, 'destroy'])->middleware('permission:codification.delete|commercialisation.delete|users.manage');
 
+    // Magasins
+    Route::get('/magasins', [MagasinController::class, 'index'])->middleware('permission:codification.view|commercialisation.view|users.manage');
+    Route::post('/magasins', [MagasinController::class, 'store'])->middleware('permission:codification.create|commercialisation.create|users.manage');
+    Route::get('/magasins/{magasin}', [MagasinController::class, 'show'])->middleware('permission:codification.view|commercialisation.view|users.manage');
+    Route::put('/magasins/{magasin}', [MagasinController::class, 'update'])->middleware('permission:codification.update|commercialisation.update|users.manage');
+    Route::patch('/magasins/{magasin}', [MagasinController::class, 'update'])->middleware('permission:codification.update|commercialisation.update|users.manage');
+    Route::delete('/magasins/{magasin}', [MagasinController::class, 'destroy'])->middleware('permission:codification.delete|commercialisation.delete|users.manage');
 
-    //RECENSEMENT -----------------------------------------------------------
+    // Ayants-droits
+    Route::get('/ayants-droits', [AyantDroitController::class, 'index'])->middleware('permission:gestion_litiges.view|users.manage');
+    Route::post('/ayants-droits', [AyantDroitController::class, 'store'])->middleware('permission:gestion_litiges.create|users.manage');
+    Route::get('/ayants-droits/{ayantDroit}', [AyantDroitController::class, 'show'])->middleware('permission:gestion_litiges.view|users.manage');
+    Route::put('/ayants-droits/{ayantDroit}', [AyantDroitController::class, 'update'])->middleware('permission:gestion_litiges.update|users.manage');
+    Route::patch('/ayants-droits/{ayantDroit}', [AyantDroitController::class, 'update'])->middleware('permission:gestion_litiges.update|users.manage');
+    Route::delete('/ayants-droits/{ayantDroit}', [AyantDroitController::class, 'destroy'])->middleware('permission:gestion_litiges.delete|users.manage');
 
-    Route::get('/recensements',[RecensementController::class, 'index']
-    )->middleware('permission:recensement.view');
-    Route::post('/recensements',[RecensementController::class, 'store']
-    )->middleware('permission:recensement.create');
-    Route::get('/recensements/{recensement}',[RecensementController::class, 'show']
-    )->middleware('permission:recensement.view');
-    Route::put('/recensements/{recensement}',[RecensementController::class, 'update']
-    )->middleware('permission:recensement.update');
-    Route::patch('/recensements/{recensement}',[RecensementController::class, 'update']
-    )->middleware('permission:recensement.update');
-    Route::delete('/recensements/{recensement}',[RecensementController::class, 'destroy']
-    )->middleware('permission:recensement.delete');
+    // Ayant-droit-parcelles
+    Route::get('/ayant-droit-parcelles', [AyantDroitParcelleController::class, 'index'])->middleware('permission:gestion_litiges.view|users.manage');
+    Route::post('/ayant-droit-parcelles', [AyantDroitParcelleController::class, 'store'])->middleware('permission:gestion_litiges.create|users.manage');
+    Route::get('/ayant-droit-parcelles/{ayantDroitParcelle}', [AyantDroitParcelleController::class, 'show'])->middleware('permission:gestion_litiges.view|users.manage');
+    Route::put('/ayant-droit-parcelles/{ayantDroitParcelle}', [AyantDroitParcelleController::class, 'update'])->middleware('permission:gestion_litiges.update|users.manage');
+    Route::patch('/ayant-droit-parcelles/{ayantDroitParcelle}', [AyantDroitParcelleController::class, 'update'])->middleware('permission:gestion_litiges.update|users.manage');
+    Route::delete('/ayant-droit-parcelles/{ayantDroitParcelle}', [AyantDroitParcelleController::class, 'destroy'])->middleware('permission:gestion_litiges.delete|users.manage');
 
+    // RECENSEMENT -----------------------------------------------------------
+    Route::get('/recensements', [RecensementController::class, 'index'])->middleware('permission:recensement.view');
+    Route::post('/recensements', [RecensementController::class, 'store'])->middleware('permission:recensement.create');
+    Route::get('/recensements/{recensement}', [RecensementController::class, 'show'])->middleware('permission:recensement.view');
+    Route::put('/recensements/{recensement}', [RecensementController::class, 'update'])->middleware('permission:recensement.update');
+    Route::patch('/recensements/{recensement}', [RecensementController::class, 'update'])->middleware('permission:recensement.update');
+    Route::delete('/recensements/{recensement}', [RecensementController::class, 'destroy'])->middleware('permission:recensement.delete');
 
-    //CODIFICATION -----------------------------------------------------------
-
-    Route::get('/codification-operateurs',[SuiviCodificationOperateurController::class, 'index']
-    )->middleware('permission:codification.view');
-    Route::post('/codification-operateurs',[SuiviCodificationOperateurController::class, 'store']
-    )->middleware('permission:codification.create');
-    Route::get('/codification-operateurs/{suiviCodificationOperateur}',[SuiviCodificationOperateurController::class, 'show']
-    )->middleware('permission:codification.view');
-    Route::put('/codification-operateurs/{suiviCodificationOperateur}',[SuiviCodificationOperateurController::class, 'update']
-    )->middleware('permission:codification.update');
-    Route::patch('/codification-operateurs/{suiviCodificationOperateur}',[SuiviCodificationOperateurController::class, 'update']
-    )->middleware('permission:codification.update');
-    Route::delete('/codification-operateurs/{suiviCodificationOperateur}',[SuiviCodificationOperateurController::class, 'destroy']
-    )->middleware('permission:codification.delete');
-
-    //ADMINISTRATION ----------------------------------------------------------
-
-    Route::patch('/users/{user}/statut',[UserController::class, 'toggleActif']);
-    Route::get('/users/disponibles', [UserController::class, 'disponibles']);
-    Route::apiResource('users',UserController::class);
-    Route::get('/users/{user}/roles',[UserController::class, 'roles']);
-    Route::put('/users/{user}/roles',[UserController::class, 'syncRoles']);
+    // CODIFICATION -----------------------------------------------------------
+    Route::get('/codification-operateurs', [SuiviCodificationOperateurController::class, 'index'])->middleware('permission:codification.view');
+    Route::post('/codification-operateurs', [SuiviCodificationOperateurController::class, 'store'])->middleware('permission:codification.create');
+    Route::get('/codification-operateurs/{suiviCodificationOperateur}', [SuiviCodificationOperateurController::class, 'show'])->middleware('permission:codification.view');
+    Route::put('/codification-operateurs/{suiviCodificationOperateur}', [SuiviCodificationOperateurController::class, 'update'])->middleware('permission:codification.update');
+    Route::patch('/codification-operateurs/{suiviCodificationOperateur}', [SuiviCodificationOperateurController::class, 'update'])->middleware('permission:codification.update');
+    Route::delete('/codification-operateurs/{suiviCodificationOperateur}', [SuiviCodificationOperateurController::class, 'destroy'])->middleware('permission:codification.delete');
 
     //RÔLES --------------------------------------------------------------------
 
@@ -279,6 +295,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/users',[UserController::class, 'index'])->middleware('permission:users.manage');
     Route::post('/users',[UserController::class, 'store'])->middleware('permission:users.manage');
+    Route::get('/users/disponibles', [UserController::class, 'disponibles']
+    )->middleware('permission:users.manage|agents.create|agents.update');
     Route::get('/users/{user}',[UserController::class, 'show'])->middleware('permission:users.manage');
     Route::put('/users/{user}',[UserController::class, 'update'])->middleware('permission:users.manage');
     Route::patch('/users/{user}',[UserController::class, 'update'])->middleware('permission:users.manage');

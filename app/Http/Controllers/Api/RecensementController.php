@@ -10,6 +10,7 @@ use App\Models\Producteur;
 use App\Models\Parcelle;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 
 
@@ -41,16 +42,16 @@ class RecensementController extends Controller
         try {
             $data = $request->validated();
 
-            //1 - Création du producteur
+            //1 - Création du producteur avec code unique sécurisé
             $producteurData = $data['producteur'];
+            $maxId = Producteur::lockForUpdate()->max('id') ?? 0;
+            $codeProducteur = 'PRD-CI' . str_pad($maxId + 1, 4, '0', STR_PAD_LEFT);
+            if (Producteur::where('code_producteur', $codeProducteur)->exists()) {
+                $codeProducteur = 'PRD-CI' . str_pad($maxId + 1, 4, '0', STR_PAD_LEFT) . '-' . strtoupper(Str::random(3));
+            }
+
             $producteur = Producteur::create([
-                'code_producteur' => 
-                    'PRD-CI'.str_pad(
-                        Producteur::count()+1,
-                        4,
-                        '0',
-                        STR_PAD_LEFT
-                    ),
+                'code_producteur' => $codeProducteur,
                 'nom' => $producteurData['nom'],
                 'prenoms' => $producteurData['prenoms'],
                 'contact' => $producteurData['contact'] ?? null,

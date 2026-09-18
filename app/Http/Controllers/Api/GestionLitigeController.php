@@ -41,6 +41,26 @@ class GestionLitigeController extends Controller
  
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'mission_suivi_id' => ['required', 'integer', 'exists:mission_suivis,id'],
+            'parcelle_id' => ['required', 'integer', 'exists:parcelles,id'],
+            'motif_changement_propriete' => ['nullable', 'string', 'max:500'],
+            'qualite_autorite_villageoise' => ['nullable', 'string', 'max:255'],
+            'nom_autorite_villageoise' => ['nullable', 'string', 'max:255'],
+            'visa_autorite_villageoise' => ['nullable', 'string', 'max:255'],
+            'date_collecte' => ['required', 'date'],
+            'ayants_droit' => ['required', 'array', 'min:1'],
+            'ayants_droit.*.superficie_attribuee_ha' => ['required', 'numeric', 'min:0'],
+            'ayants_droit.*.est_producteur' => ['nullable', 'boolean'],
+            'ayants_droit.*.producteur_id' => ['nullable', 'integer', 'exists:producteurs,id'],
+            'ayants_droit.*.nom' => ['nullable', 'string', 'max:150'],
+            'ayants_droit.*.prenoms' => ['nullable', 'string', 'max:150'],
+            'ayants_droit.*.contact' => ['nullable', 'string', 'max:50'],
+            'ayants_droit.*.date_naissance' => ['nullable', 'date'],
+            'ayants_droit.*.type_piece_identite' => ['nullable', 'string', 'max:50'],
+            'ayants_droit.*.numero_piece' => ['nullable', 'string', 'max:100'],
+        ]);
+
         DB::beginTransaction();
 
         try {
@@ -143,7 +163,7 @@ class GestionLitigeController extends Controller
         return $gestionLitige->load([
             'missionSuivi.campagne',
             'missionSuivi.agent',
-            'missionSuivi.localite',
+            'missionSuivi.localite.sousPrefecture.departement.delegationRegionale',
             'parcelle.producteur',
             'ayantDroits',
             'ayantDroits.parcelles'
